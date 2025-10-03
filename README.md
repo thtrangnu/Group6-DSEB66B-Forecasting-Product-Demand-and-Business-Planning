@@ -35,5 +35,5 @@ Interpreting the practical implications of the results for store management and 
 **Original dataset** : https://www.kaggle.com/datasets/felixzhao/productdemandforecasting
 
 The raw dataset used for this study was derived from the original dataset through a filtering process. This step was conducted to simplify the data structure and make it more suitable for the analytical capacity and academic level of the student research group. By reducing unnecessary complexity, the dataset retains its essential characteristics while remaining accessible for analysis and model construction.
-## *4.Conclusion*
+## *4. Conclusion*
 The application of linear approximation facilitates the identification of future revenue trends. Although the linear model may not fully capture nonlinear factors inherent in business operations, it provides a solid scientific foundation for estimating overall tendencies. This, in turn, supports managers in business planning, enhances competitiveness, and serves as a reference point for the development of more advanced forecasting models in the future.
