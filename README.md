@@ -37,3 +37,59 @@ Interpreting the practical implications of the results for store management and 
 The raw dataset used for this study was derived from the original dataset through a filtering process. This step was conducted to simplify the data structure and make it more suitable for the analytical capacity and academic level of the student research group. By reducing unnecessary complexity, the dataset retains its essential characteristics while remaining accessible for analysis and model construction.
 ## *4. Conclusion*
 The application of linear approximation facilitates the identification of future revenue trends. Although the linear model may not fully capture nonlinear factors inherent in business operations, it provides a solid scientific foundation for estimating overall tendencies. This, in turn, supports managers in business planning, enhances competitiveness, and serves as a reference point for the development of more advanced forecasting models in the future.
+## *5. Team Contribution*
+*Lê Thị Thuỳ Trang - Leader - 22%*
+- Searched for project ideas and datasets, filtered the original dataset to create the dataset used in the project, and studied how to preprocess and prepare data for model building.
+- Assigned tasks to team members.
+- Learned how to build the web using Dash (Flask), combining CSS and HTML for better UI design.
+- Studied machine learning models (mainly Linear Regression, and additionally Decision Tree and Random Forest).
+- Coded the machine learning model, trained the model using both manual computation and sklearn.
+- Proposed ideas for the web structure.
+- Coded the Result page of the web application.
+- Integrated code from all members, fixed errors, and delivered the final version for the web.
+*Vũ Thị Thuý Hằng - 18%*
+- Learned how to build the web using Dash (Flask), combining CSS and HTML.
+- Coded the Dataset page of the web.
+- Studied data processing methods.
+- Handled and coded the frontend part of the website.
+*Vũ Thị Thu Trang - 15%*
+- Learned how to filter, clean data, and handle outliers.
+- Coded the data filtering and cleaning part.
+- Studied the Linear Regression model.
+*Ninh Duy Đức - 15%*
+- Learned how to perform data exploration.
+- Coded the data exploration section.
+- Studied the Linear Regression model.
+* Nguyễn Gia Khánh - 15%*
+- Learned how to build the web using Dash (Flask), combining CSS and HTML.
+- Created the project slides.
+- Coded the Homepage of the web.
+*Trần Viết Long - 15%*
+- Learned how to build the web using Dash (Flask), combining CSS and HTML.
+- Identified the applications of NumPy in the project.
+- Studied the Linear Regression model.
+- Coded the EDA section of the web
+## *6.How to Run This App*
+We recommend creating a virtual environment using Python 3 before running the application.
+Clone the repository and open your terminal in the root project folder:
+git clone https://github.com/thtrangnu/Group6-DSEB66B-Forecasting-Product-Demand-and-Business-Planning.git
+cd Group6-DSEB66B-Forecasting-Product-Demand-and-Business-Planning/Project
+python3 -m venv venv
+*Activate the virtual environment*
+*macOS / Linux (Unix systems):*
+source venv/bin/activate
+*Windows:*
+venv\Scripts\activate
+*Install required packages*
+pip install -r requirements.txt
+*Run the app locally*
+python app.py
+*Notes for macOS users*
+Use python3 and pip3 if Python 2 is still present:
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+python3 app.py
+If you encounter command not found: python, create aliases:
+alias python="python3"
+alias pip="pip3"
