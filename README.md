@@ -60,7 +60,7 @@ The application of linear approximation facilitates the identification of future
 - Learned how to perform data exploration.
 - Coded the data exploration section.
 - Studied the Linear Regression model.
-#### * Nguyễn Gia Khánh - 15%*
+#### *Nguyễn Gia Khánh - 15%*
 - Learned how to build the web using Dash (Flask), combining CSS and HTML.
 - Created the project slides.
 - Coded the Homepage of the web.
@@ -70,21 +70,21 @@ The application of linear approximation facilitates the identification of future
 - Studied the Linear Regression model.
 - Coded the EDA section of the web
 ## *6.How to Run This App*
-We recommend creating a virtual environment using Python 3 before running the application.
-Clone the repository and open your terminal in the root project folder:
+- We recommend creating a virtual environment using Python 3 before running the application.
+- Clone the repository and open your terminal in the root project folder:
 git clone https://github.com/thtrangnu/Group6-DSEB66B-Forecasting-Product-Demand-and-Business-Planning.git
 cd Group6-DSEB66B-Forecasting-Product-Demand-and-Business-Planning/Project
 python3 -m venv venv
-*Activate the virtual environment*
+- *Activate the virtual environment*
 *macOS / Linux (Unix systems):*
 source venv/bin/activate
 *Windows:*
 venv\Scripts\activate
-*Install required packages*
+- *Install required packages*
 pip install -r requirements.txt
-*Run the app locally*
+- *Run the app locally*
 python app.py
-*Notes for macOS users*
+- *Notes for macOS users*
 Use python3 and pip3 if Python 2 is still present:
 python3 -m venv venv
 source venv/bin/activate
