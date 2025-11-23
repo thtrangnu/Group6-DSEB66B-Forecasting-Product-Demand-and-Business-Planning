@@ -69,27 +69,61 @@ The application of linear approximation facilitates the identification of future
 - Identified the applications of NumPy in the project.
 - Studied the Linear Regression model.
 - Coded the EDA section of the web
-## *6.How to Run This App*
-- We recommend creating a virtual environment using Python 3 before running the application.
-- Clone the repository and open your terminal in the root project folder:
+## **6. How to Run This App**
+
+### **a. Create a Virtual Environment**
+
+We recommend creating a virtual environment using Python 3 before running the application.
+
+### **b. Clone the repository and navigate to the project folder**
+
+```bash
 git clone https://github.com/thtrangnu/Group6-DSEB66B-Forecasting-Product-Demand-and-Business-Planning.git
 cd Group6-DSEB66B-Forecasting-Product-Demand-and-Business-Planning/Project
 python3 -m venv venv
-- *Activate the virtual environment*
-*macOS / Linux (Unix systems):*
+```
+
+### **c. Activate the virtual environment**
+
+#### **macOS / Linux (Unix systems):**
+
+```bash
 source venv/bin/activate
-*Windows:*
+```
+
+#### **Windows:**
+
+```bash
 venv\Scripts\activate
-- *Install required packages*
+```
+
+### **d. Install required packages**
+
+```bash
 pip install -r requirements.txt
-- *Run the app locally*
+```
+
+### **e. Run the app locally**
+
+```bash
 python app.py
-- *Notes for macOS users*
-Use python3 and pip3 if Python 2 is still present:
+```
+
+### **f. Notes for macOS users**
+
+If Python 2 is still present on your system, use `python3` and `pip3`:
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 python3 app.py
-If you encounter command not found: python, create aliases:
+```
+
+If you encounter `command not found: python`, create aliases:
+
+```bash
 alias python="python3"
 alias pip="pip3"
+```
+3"
