@@ -38,7 +38,7 @@ The raw dataset used for this study was derived from the original dataset throug
 ## *4. Conclusion*
 The application of linear approximation facilitates the identification of future revenue trends. Although the linear model may not fully capture nonlinear factors inherent in business operations, it provides a solid scientific foundation for estimating overall tendencies. This, in turn, supports managers in business planning, enhances competitiveness, and serves as a reference point for the development of more advanced forecasting models in the future.
 ## *5. Team Contribution*
-*Lê Thị Thuỳ Trang - Leader - 22%*
+#### *Lê Thị Thuỳ Trang - Leader - 22%*
 - Searched for project ideas and datasets, filtered the original dataset to create the dataset used in the project, and studied how to preprocess and prepare data for model building.
 - Assigned tasks to team members.
 - Learned how to build the web using Dash (Flask), combining CSS and HTML for better UI design.
@@ -47,24 +47,24 @@ The application of linear approximation facilitates the identification of future
 - Proposed ideas for the web structure.
 - Coded the Result page of the web application.
 - Integrated code from all members, fixed errors, and delivered the final version for the web.
-*Vũ Thị Thuý Hằng - 18%*
+#### *Vũ Thị Thuý Hằng - 18%*
 - Learned how to build the web using Dash (Flask), combining CSS and HTML.
 - Coded the Dataset page of the web.
 - Studied data processing methods.
 - Handled and coded the frontend part of the website.
-*Vũ Thị Thu Trang - 15%*
+#### *Vũ Thị Thu Trang - 15%*
 - Learned how to filter, clean data, and handle outliers.
 - Coded the data filtering and cleaning part.
 - Studied the Linear Regression model.
-*Ninh Duy Đức - 15%*
+#### *Ninh Duy Đức - 15%*
 - Learned how to perform data exploration.
 - Coded the data exploration section.
 - Studied the Linear Regression model.
-* Nguyễn Gia Khánh - 15%*
+#### * Nguyễn Gia Khánh - 15%*
 - Learned how to build the web using Dash (Flask), combining CSS and HTML.
 - Created the project slides.
 - Coded the Homepage of the web.
-*Trần Viết Long - 15%*
+#### *Trần Viết Long - 15%*
 - Learned how to build the web using Dash (Flask), combining CSS and HTML.
 - Identified the applications of NumPy in the project.
 - Studied the Linear Regression model.
