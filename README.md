@@ -47,7 +47,7 @@ The application of linear approximation facilitates the identification of future
 - Proposed ideas for the web structure.
 - Coded the Result page of the web application.
 - Integrated code from all members, fixed errors, and delivered the final version for the web.
-#### *Vũ Thị Thuý Hằng - 18%*
+#### *Vũ Thị Thuý Hằng - 18% - Sublead*
 - Learned how to build the web using Dash (Flask), combining CSS and HTML.
 - Coded the Dataset page of the web.
 - Studied data processing methods.
@@ -126,4 +126,3 @@ If you encounter `command not found: python`, create aliases:
 alias python="python3"
 alias pip="pip3"
 ```
-3"
