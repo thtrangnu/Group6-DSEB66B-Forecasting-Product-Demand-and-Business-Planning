@@ -38,7 +38,7 @@ The raw dataset used for this study was derived from the original dataset throug
 ## *4. Conclusion*
 The application of linear approximation facilitates the identification of future revenue trends. Although the linear model may not fully capture nonlinear factors inherent in business operations, it provides a solid scientific foundation for estimating overall tendencies. This, in turn, supports managers in business planning, enhances competitiveness, and serves as a reference point for the development of more advanced forecasting models in the future.
 ## *5. Team Contribution*
-#### *Lê Thị Thuỳ Trang - Leader - 22%*
+#### *Lê Thị Thuỳ Trang - Leader - 20%*
 - Searched for project ideas and datasets, filtered the original dataset to create the dataset used in the project, and studied how to preprocess and prepare data for model building.
 - Assigned tasks to team members.
 - Learned how to build the web using Dash (Flask), combining CSS and HTML for better UI design.
@@ -56,7 +56,7 @@ The application of linear approximation facilitates the identification of future
 - Learned how to filter, clean data, and handle outliers.
 - Coded the data filtering and cleaning part.
 - Studied the Linear Regression model.
-#### *Ninh Duy Đức - 15%*
+#### *Ninh Duy Đức - 17%*
 - Learned how to perform data exploration.
 - Coded the data exploration section.
 - Studied the Linear Regression model.
