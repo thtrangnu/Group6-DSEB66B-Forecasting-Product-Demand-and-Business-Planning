@@ -1,8 +1,8 @@
-# Using Linear Regression for revenue estimation and prediction of the store.
+# Using Linear Regression for demand estimation and prediction of the store.
 ## *1. Overview*
 In business operations, revenue forecasting plays a crucial role in supporting managerial decision-making, strategic planning, and resource optimization. An effective forecasting system can help enterprises anticipate future demand, adjust supply plans, manage inventory, and evaluate the effectiveness of marketing campaigns.
 ## *2. Research Methodology* 
-In this study, the project focuses on **estimating and predicting store revenue based on historical data**, with the primary methodological approach being **linear regression**. Essentially, linear regression assumes that the relationship between the dependent variable (revenue) and the independent variable (time or other factors) can be described by a linear function. Although this method is relatively simple, it possesses several significant advantages, such as:
+In this study, the project focuses on **estimating and predicting store demand based on historical data**, with the primary methodological approach being **linear regression**. Essentially, linear regression assumes that the relationship between the dependent variable (revenue) and the independent variable (time or other factors) can be described by a linear function. Although this method is relatively simple, it possesses several significant advantages, such as:
 Ease of implementation and interpretability;
 No requirement for large datasets;
 Transparency, allowing for a direct interpretation of the impact of input variables on revenue;
