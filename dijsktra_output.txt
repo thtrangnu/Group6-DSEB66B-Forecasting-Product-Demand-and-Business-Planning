@@ -1,0 +1,3 @@
+--- KẾT QUẢ THUẬT TOÁN DIJKSTRA ---
+Chi phí đường đi ngắn nhất từ 0 đến 5 là: 10
+Đường đi: 0 -> 2 -> 4 -> 5
