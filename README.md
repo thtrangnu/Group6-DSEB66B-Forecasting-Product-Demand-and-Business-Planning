@@ -52,7 +52,7 @@ The application of linear approximation facilitates the identification of future
 - Coded the Dataset page of the web.
 - Studied data processing methods.
 - Handled and coded the frontend part of the website.
-#### *Vũ Thị Thu Trang - 15%*
+#### *Vũ Thị Thu Trang - 14%*
 - Learned how to filter, clean data, and handle outliers.
 - Coded the data filtering and cleaning part.
 - Studied the Linear Regression model.
@@ -60,7 +60,7 @@ The application of linear approximation facilitates the identification of future
 - Learned how to perform data exploration.
 - Coded the data exploration section.
 - Studied the Linear Regression model.
-#### *Nguyễn Gia Khánh - 15%*
+#### *Nguyễn Gia Khánh - 16%*
 - Learned how to build the web using Dash (Flask), combining CSS and HTML.
 - Created the project slides.
 - Coded the Homepage of the web.
