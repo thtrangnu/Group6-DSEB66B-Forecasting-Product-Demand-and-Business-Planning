@@ -64,7 +64,6 @@ and multivariate linear regression.
 1. **Dataset** – filter Product_0979, clean invalid records, build a complete daily timeline.  
 2. **Data Storytelling – Exploring the Data Through Narrative** – uncover the 5-year journey of Product_0979 through stories: silent days with zero demand, sudden explosive spikes, seasonal highs and lows, holiday effects, promotional surges, and anomaly clusters that reveal how the market behaves.  
 3. **Model** – train and evaluate multivariate linear regression (and tree-based baselines).  
-4. **Conclusion** – interpret model performance and provide business recommendations.
                     """
                 ),
             ],
@@ -117,7 +116,6 @@ and multivariate linear regression.
 - **Dataset** – see raw → cleaned → enriched data, with trend and feature engineering steps.  
 - **Data Storytelling – Exploring the Data Through Narrative** – discover how Product_0979 behaves over 5 years through narrative insights: quiet days, explosive spikes, seasonal dynamics, holiday impacts, promotional effects, and anomaly clusters.  
 - **Model** – regression metrics, model comparison, and actual vs predicted curves.  
-- **Conclusion** – final assessment and business insights.  
 - **About / Team** – project members and roles.
                     """
                 ),
