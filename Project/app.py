@@ -46,7 +46,6 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink("Dataset", href="/dataset")),
         dbc.NavItem(dbc.NavLink("Story", href="/story")),
         dbc.NavItem(dbc.NavLink("Model", href="/model")),
-        dbc.NavItem(dbc.NavLink("Conclusion", href="/conclusion")),
         dbc.NavItem(dbc.NavLink("About / Team", href="/about")),
     ],
     brand="Demands Forecasting Dashboard",
