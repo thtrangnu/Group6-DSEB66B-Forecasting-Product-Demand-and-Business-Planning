@@ -1,4 +1,5 @@
-# Using Linear Regression for demand estimation and prediction of the store.
+# Using Linear Regression for demand estimation and forecasting of the store. 
+**update 27/11/2025** : sửa file notebook EDA, Final (về quá trình khai phá dữ liệu, đưa ra insight trực quan và chia lại cách train/test cho tập dữ liệu timeseries, từ đó đánh giá lại 4 mô hình), update dashboard (bỏ bớt page conclusion, thay thế page model, page eda. Page EDA trở thành page Story - tìm hiểu dữ liệu qua một câu chuyện được kể bởi nhân vật giả lập, ở trang này em xin phép dùng tiếng Việt để kể chuyện, do đã gắn insight sẵn ở từng trang nên em xin phép bỏ page conclusion.
 ## *1. Overview*
 In business operations, revenue forecasting plays a crucial role in supporting managerial decision-making, strategic planning, and resource optimization. An effective forecasting system can help enterprises anticipate future demand, adjust supply plans, manage inventory, and evaluate the effectiveness of marketing campaigns.
 ## *2. Research Methodology* 
