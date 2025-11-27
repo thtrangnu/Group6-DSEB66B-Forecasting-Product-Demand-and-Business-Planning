@@ -33,10 +33,11 @@ layout = html.Div(
                     "forecasting project for Product_0979. It consolidates the entire analytical "
                     "pipeline, starting with raw data ingestion and moving through cleaning, "
                     "validation, and feature enrichment to ensure a reliable foundation for "
-                    "analysis. The workflow continues with in-depth exploratory data analysis "
-                    "(EDA) to examine trends, seasonality, anomalies, and key demand drivers, "
-                    "followed by the construction of a linear regression model to estimate and "
-                    "predict future demand. The dashboard also presents model evaluation metrics, "
+                    "analysis. The workflow continues with in-depth data storytelling, where the "
+                    "historical demand patterns are interpreted through narrative insights — "
+                    "including trends, seasonality, anomalies, and key demand drivers. This is "
+                    "followed by the development of a linear regression model to estimate and "
+                    "predict future demand. The dashboard also presents evaluation metrics, "
                     "visualizations of prediction performance, and final conclusions, providing "
                     "a clear and transparent view of how historical data is transformed into "
                     "actionable insights for planning and inventory optimization.",
@@ -61,7 +62,7 @@ and multivariate linear regression.
 **Main Steps**
 
 1. **Dataset** – filter Product_0979, clean invalid records, build a complete daily timeline.  
-2. **EDA** – analyse trend, seasonality, demand distribution and correlation between variables.  
+2. **Data Storytelling – Exploring the Data Through Narrative** – uncover the 5-year journey of Product_0979 through stories: silent days with zero demand, sudden explosive spikes, seasonal highs and lows, holiday effects, promotional surges, and anomaly clusters that reveal how the market behaves.  
 3. **Model** – train and evaluate multivariate linear regression (and tree-based baselines).  
 4. **Conclusion** – interpret model performance and provide business recommendations.
                     """
@@ -114,7 +115,7 @@ and multivariate linear regression.
                 dcc.Markdown(
                     """
 - **Dataset** – see raw → cleaned → enriched data, with trend and feature engineering steps.  
-- **EDA** – visual exploration: long-term trend, seasonality, distribution and correlations.  
+- **Data Storytelling – Exploring the Data Through Narrative** – discover how Product_0979 behaves over 5 years through narrative insights: quiet days, explosive spikes, seasonal dynamics, holiday impacts, promotional effects, and anomaly clusters.  
 - **Model** – regression metrics, model comparison, and actual vs predicted curves.  
 - **Conclusion** – final assessment and business insights.  
 - **About / Team** – project members and roles.

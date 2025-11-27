@@ -1,197 +1,430 @@
 import dash
 from dash import html, dcc
+
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 
-from sklearn.model_selection import train_test_split
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score
-from sklearn.model_selection import cross_val_score
+from sklearn.metrics import (
+    r2_score,
+    mean_absolute_error,
+    mean_squared_error,
+)
 
+# =========================================================
+# Register Page
+# =========================================================
 dash.register_page(__name__, path="/model", name="Model")
 
-# ===========================
-# Load data
-# ===========================
+# =========================================================
+# LOAD DATA
+# =========================================================
 df = pd.read_excel("data/data0979_enriched.xlsx")
+df = df.sort_values(by="Date")
 
-y = df["Total_Order_Demand"]
+y = df["Total_Order_Demand"].values.reshape(-1, 1)
 X = df.drop(columns=["Total_Order_Demand"])
-# Chỉ giữ cột số + one-hot, bỏ datetime
-X = df.drop(columns=["Total_Order_Demand"])
-X = X.select_dtypes(exclude=["datetime"])
 
-# One-hot encoding
+# drop datetime
+X = X.select_dtypes(exclude=["datetime64[ns]", "datetimetz"])
+
+# one-hot
 X = pd.get_dummies(X, drop_first=True)
 
-# Ép toàn bộ giá trị về float
-X = X.astype(float)
+X_np = X.values.astype(float)
+y_np = y.astype(float)
 
+total_rows = len(X_np)
+num_blocks = 6
+block_size = total_rows // num_blocks
+test_size = 100
+train_size = block_size - test_size
 
-# Manual LR
-X_np = np.hstack((np.ones((X.shape[0], 1)), X.values.astype(float)))
-y_np = y.values.reshape(-1, 1)
+# =========================================================
+# MANUAL NORMAL EQUATION
+# =========================================================
 
-X_train_np, X_test_np, y_train_np, y_test_np = train_test_split(
-    X_np, y_np, test_size=0.2, random_state=1
+X_with_bias = np.hstack((np.ones((X_np.shape[0], 1)), X_np))
+
+X_test_blocks_manual = []
+y_test_blocks_manual = []
+y_pred_blocks_manual = []
+R2_blocks_manual = []
+SSE_blocks_manual = []
+MSE_blocks_manual = []
+
+block_id = 1
+
+for start in range(0, total_rows, block_size):
+    if start + block_size > total_rows:
+        break
+
+    X_train = X_with_bias[start:start+train_size]
+    X_test  = X_with_bias[start+train_size:start+block_size]
+    y_train = y_np[start:start+train_size]
+    y_test  = y_np[start+train_size:start+block_size]
+
+    XtX = X_train.T @ X_train
+    Xty = X_train.T @ y_train
+    beta = np.linalg.pinv(XtX) @ Xty
+
+    y_pred = X_test @ beta
+
+    residual = y_test - y_pred
+    SSE = float(residual.T @ residual)
+    MSE = SSE / len(y_test)
+    SS_tot = float(np.sum((y_test - np.mean(y_test)) ** 2))
+    R2 = 1 - SSE / SS_tot
+
+    X_test_blocks_manual.append(X_test)
+    y_test_blocks_manual.append(y_test)
+    y_pred_blocks_manual.append(y_pred)
+    R2_blocks_manual.append(R2)
+    SSE_blocks_manual.append(SSE)
+    MSE_blocks_manual.append(MSE)
+
+    block_id += 1
+
+metrics_manual_df = pd.DataFrame({
+    "Block": list(range(1, 7)),
+    "SSE": np.round(SSE_blocks_manual, 2),
+    "MSE": np.round(MSE_blocks_manual, 2),
+    "R²": np.round(R2_blocks_manual, 4)
+})
+
+# =========================================================
+# SKLEARN MODELS
+# =========================================================
+
+def evaluate_model(model, X_train, y_train, X_test, y_test):
+    model.fit(X_train, y_train.ravel())
+    pred = model.predict(X_test)
+    return (
+        r2_score(y_test, pred),
+        mean_absolute_error(y_test, pred),
+        mean_squared_error(y_test, pred),
+        np.sqrt(mean_squared_error(y_test, pred)),
+        pred.reshape(-1,1)
+    )
+
+results = []
+y_test_blocks = []
+pred_LR = []
+pred_DT = []
+pred_RF = []
+
+block_id = 1
+
+for start in range(0, total_rows, block_size):
+    if start + block_size > total_rows:
+        break
+
+    X_train = X_np[start:start+train_size]
+    X_test  = X_np[start+train_size:start+block_size]
+    y_train = y_np[start:start+train_size]
+    y_test  = y_np[start+train_size:start+block_size]
+
+    y_test_blocks.append(y_test)
+
+    # LR
+    r2_lr, mae_lr, mse_lr, rmse_lr, p_lr = evaluate_model(
+        LinearRegression(), X_train, y_train, X_test, y_test
+    )
+    pred_LR.append(p_lr)
+    results.append([block_id, "LinearRegression", r2_lr, mae_lr, mse_lr, rmse_lr])
+
+    # DT
+    r2_dt, mae_dt, mse_dt, rmse_dt, p_dt = evaluate_model(
+        DecisionTreeRegressor(), X_train, y_train, X_test, y_test
+    )
+    pred_DT.append(p_dt)
+    results.append([block_id, "DecisionTree", r2_dt, mae_dt, mse_dt, rmse_dt])
+
+    # RF
+    r2_rf, mae_rf, mse_rf, rmse_rf, p_rf = evaluate_model(
+        RandomForestRegressor(n_estimators=100, random_state=42),
+        X_train, y_train, X_test, y_test
+    )
+    pred_RF.append(p_rf)
+    results.append([block_id, "RandomForest", r2_rf, mae_rf, mse_rf, rmse_rf])
+
+    block_id += 1
+
+results_df = pd.DataFrame(
+    results,
+    columns=["Block","Model","R2","MAE","MSE","RMSE"]
 )
 
-# Manual Beta
-XtX = X_train_np.T @ X_train_np
-Xty = X_train_np.T @ y_train_np
-beta_hat = np.linalg.inv(XtX) @ Xty
+R2_LR = results_df[results_df.Model=="LinearRegression"]["R2"].values
+R2_DT = results_df[results_df.Model=="DecisionTree"]["R2"].values
+R2_RF = results_df[results_df.Model=="RandomForest"]["R2"].values
 
-y_test_hat = X_test_np @ beta_hat
-
-# Metrics
-residuals = y_test_np - y_test_hat
-SSE = float(residuals.T @ residuals)
-MSE = SSE / len(y_test_np)
-
-SS_res = np.sum((y_test_np - y_test_hat)**2)
-SS_tot = np.sum((y_test_np - np.mean(y_test_np))**2)
-R2_manual = 1 - SS_res / SS_tot
-
-# ===========================
-# sklearn model comparison
-# ===========================
-x_train, x_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=1
-)
-
-models = [
-    ("Linear Regression", LinearRegression()),
-    ("Decision Tree", DecisionTreeRegressor()),
-    ("Random Forest", RandomForestRegressor(n_estimators=100, random_state=42)),
+best_models_df = results_df.loc[
+    results_df.groupby("Block")["R2"].idxmax(),
+    ["Block","Model","R2"]
 ]
 
-rows = []
-for name, model in models:
-    model.fit(x_train, y_train)
-    pred = model.predict(x_test)
-    r2 = r2_score(y_test, pred)
-    cv = cross_val_score(model, x_train, y_train, cv=5).mean()
-    rows.append((name, round(r2, 4), round(cv, 4)))
+best_models_df.columns = ["Block","Best Model","R²"]
 
-df_compare = pd.DataFrame(rows, columns=["Model", "R²", "CV Mean"])
+# =========================================================
+# HELPER — ADD TABLE
+# =========================================================
+def make_table_from_df(df):
+    header = [html.Th(col) for col in df.columns]
+    rows = [
+        html.Tr([html.Td(df.iloc[i,j]) for j in range(df.shape[1])])
+        for i in range(df.shape[0])
+    ]
+    return html.Table(
+        [html.Tr(header)] + rows,
+        style={"width":"100%", "borderCollapse":"collapse"}
+    )
+# =========================================================
+# PLOTS (Manual + sklearn)
+# =========================================================
 
-# ===========================
-# Plot Actual vs Predicted
-# ===========================
-fig_line = go.Figure()
-fig_line.add_trace(go.Scatter(
-    y=y_test_np.flatten(),
-    mode="lines",
-    name="Actual",
-    line=dict(color="#2a72d4", width=3)
+def plot_manual_blocks():
+    fig = make_subplots(rows=2, cols=3,
+                        subplot_titles=[f"Block {i}" for i in range(1,7)])
+    for i in range(6):
+        row = i//3 + 1
+        col = i%3 + 1
+
+        y_true = y_test_blocks_manual[i].flatten()
+        y_pred = y_pred_blocks_manual[i].flatten()
+
+        fig.add_trace(go.Scatter(
+            x=list(range(len(y_true))),
+            y=y_true,
+            mode="lines",
+            name="Actual",
+            showlegend=(i==0)
+        ), row=row, col=col)
+
+        fig.add_trace(go.Scatter(
+            x=list(range(len(y_pred))),
+            y=y_pred,
+            mode="lines",
+            name="Predicted",
+            line=dict(dash="dash"),
+            showlegend=(i==0)
+        ), row=row, col=col)
+
+        fig.add_annotation(
+            x=0.02, y=0.90,
+            xref=f"x{i+1}", yref=f"y{i+1}",
+            text=f"R² = {R2_blocks_manual[i]:.4f}",
+            showarrow=False,
+            bgcolor="white", opacity=0.7,
+            font=dict(size=11)
+        )
+
+    fig.update_layout(
+        height=650, template="plotly_white",
+        title="Manual Linear Regression (Normal Equation) — 6 Rolling Blocks"
+    )
+    return fig
+
+
+fig_manual_blocks = plot_manual_blocks()
+
+
+# MODEL FIGURES
+def plot_model_blocks(model_name, y_test_blocks, pred_blocks, R2_values):
+    fig = make_subplots(rows=2, cols=3,
+                        subplot_titles=[f"Block {i}" for i in range(1,7)])
+
+    for i in range(6):
+        row = i//3 + 1
+        col = i%3 + 1
+
+        yt = y_test_blocks[i].flatten()
+        yp = pred_blocks[i].flatten()
+
+        fig.add_trace(go.Scatter(
+            x=list(range(len(yt))), y=yt,
+            mode="lines", name="Actual",
+            showlegend=(i==0)
+        ), row=row, col=col)
+
+        fig.add_trace(go.Scatter(
+            x=list(range(len(yp))), y=yp,
+            mode="lines", name="Predicted",
+            line=dict(dash="dash"),
+            showlegend=(i==0)
+        ), row=row, col=col)
+
+        fig.add_annotation(
+            x=0.02, y=0.90,
+            xref=f"x{i+1}", yref=f"y{i+1}",
+            text=f"R² = {R2_values[i]:.4f}",
+            showarrow=False,
+            bgcolor="white", opacity=0.7,
+            font=dict(size=11)
+        )
+
+    fig.update_layout(
+        height=650,
+        template="plotly_white",
+        title=f"{model_name} — Actual vs Predicted (6 Blocks)"
+    )
+    return fig
+
+
+fig_LR_blocks = plot_model_blocks("Linear Regression",
+                                  y_test_blocks, pred_LR, R2_LR)
+fig_DT_blocks = plot_model_blocks("Decision Tree",
+                                  y_test_blocks, pred_DT, R2_DT)
+fig_RF_blocks = plot_model_blocks("Random Forest",
+                                  y_test_blocks, pred_RF, R2_RF)
+
+
+# R2 Comparison Chart
+fig_r2_compare = go.Figure()
+blocks_range = list(range(1,7))
+
+fig_r2_compare.add_trace(go.Scatter(
+    x=blocks_range, y=R2_LR,
+    mode="lines+markers",
+    name="Linear Regression"
 ))
-fig_line.add_trace(go.Scatter(
-    y=y_test_hat.flatten(),
-    mode="lines",
-    name="Predicted",
-    line=dict(color="#8abafc", width=2, dash="dash")
+fig_r2_compare.add_trace(go.Scatter(
+    x=blocks_range, y=R2_DT,
+    mode="lines+markers",
+    name="Decision Tree"
 ))
-fig_line.update_layout(
-    title="Actual vs Predicted",
-    template="plotly_white",
-    xaxis_title="Index",
-    yaxis_title="Total Order Demand",
+fig_r2_compare.add_trace(go.Scatter(
+    x=blocks_range, y=R2_RF,
+    mode="lines+markers",
+    name="Random Forest"
+))
+
+fig_r2_compare.update_layout(
+    title="R² Across Time Blocks (Model Comparison)",
+    xaxis_title="Block",
+    yaxis_title="R²",
+    template="plotly_white"
 )
 
-# ===========================
-# Layout
-# ===========================
+
+# =========================================================
+# FINAL LAYOUT
+# =========================================================
+
 layout = html.Div(
     className="page fade-in",
     children=[
-        html.H2("Model Performance", className="section-title"),
 
-        # SSE - MSE - R2 manual
+        html.H2("Model Performance",
+                className="section-title"),
+
+        # I. Manual Normal Equation
         html.Div(
             className="data-card",
             children=[
-                html.H3("Manual Linear Regression Metrics", style={"margin-bottom": "10px"}),
-                html.P(f"SSE: {SSE:,.0f}"),
-                html.P(f"MSE: {MSE:,.0f}"),
-                html.P(f"R² (Test): {R2_manual:.4f}"),
-            ],
-        ),
-
-        # Comparison table
-        html.H3("Model Compare", className="sub-title"),
-        html.Div(
-            className="data-card",
-            children=[
-                html.Table(
-                    [html.Tr([html.Th(col) for col in df_compare.columns])] +
-                    [html.Tr([html.Td(value) for value in row]) for row in df_compare.values],
-                )
-            ],
-        ),
-
-        # Plot
-        html.H3("Actual vs Predicted", className="sub-title"),
-        dcc.Graph(figure=fig_line, className="chart-box"),
-
-        # ===========================
-        # Interpretation Section
-        # ===========================
-        html.Div(
-            className="data-card",
-            children=[
-                html.H3("Model Evaluation & Assessment", style={"margin-bottom": "10px"}),
-
+                html.H3("I. Manual Linear Regression (using Normal Equation)",
+                        className="sub-title"),
                 dcc.Markdown(
                     """
+The dataset is divided into **6 consecutive rolling blocks**.
+Each block contains:
 
+- **Train:** first 204 observations  
+- **Test:** next 100 observations  
+- Coefficients estimated using the **Normal Equation**  
 
-##### **R² Evaluation on Test Set**
+For each block we compute **SSE, MSE, and R²**.
+                    """
+                ),
+                make_table_from_df(metrics_manual_df),
+                html.Br(),
+                dcc.Graph(figure=fig_manual_blocks),
+            ],
+        ),
 
-When calculating **R² on the test_set** using both the manual formula (Normal Equation) and scikit-learn’s `r2_score`, the results are **identical**:
+        # II. sklearn Models
+        html.Div(
+            className="data-card",
+            children=[
+                html.H3("II. Performance Comparison of 3 sklearn Models",
+                        className="sub-title"),
+                dcc.Markdown(
+                    """
+Models evaluated:
 
-**Manual R² = 0.8932**
+1. **LinearRegression**  
+2. **DecisionTreeRegressor**  
+3. **RandomForestRegressor**
 
----
+Metrics:
 
-##### **Meaning**
+- R²  
+- MAE  
+- MSE  
+- RMSE  
+                    """
+                ),
+                make_table_from_df(
+                    results_df.round({"R2":4,"MAE":2,"MSE":2,"RMSE":2})
+                ),
+                html.Br(),
+                html.H4("R² Across Blocks", className="sub-title"),
+                dcc.Graph(figure=fig_r2_compare),
+            ],
+        ),
 
-The value **0.8932** indicates that the model explains **89.32% of the variance** in the target variable on the test data.  
-The perfect match between the two calculations confirms that the manual implementation of the R² formula is **correct and accurate**.
+        # III. Actual vs Predicted
+        html.Div(
+            className="data-card",
+            children=[
+                html.H3("III. Actual vs Predicted (6 Blocks per Model)",
+                        className="sub-title"),
 
----
+                html.H4("1. Linear Regression"),
+                dcc.Graph(figure=fig_LR_blocks),
 
-##### **Predictive Performance**
+                html.H4("2. Decision Tree", style={"marginTop":"25px"}),
+                dcc.Graph(figure=fig_DT_blocks),
 
-- A high R² value → the model **accurately predicts most observations** in the test_set.  
-- The remaining variance (~10.7%) **is not explained** by the model, possibly due to:
-  - data noise  
-  - missing important predictors  
-  - nonlinear relationships
+                html.H4("3. Random Forest", style={"marginTop":"25px"}),
+                dcc.Graph(figure=fig_RF_blocks),
+            ],
+        ),
 
----
+        # IV. Best Model Summary
+        html.Div(
+            className="data-card",
+            children=[
+                html.H3("IV. Best Performing Model per Block",
+                        className="sub-title"),
 
-##### **Generalization Ability**
+                make_table_from_df(best_models_df.round({"R²":4})),
+                html.Br(),
 
-- **R²_test** is an important metric for assessing how well the model predicts new data.  
-- If R²_test is much lower than R²_train → the model is overfitting.  
-- In this case:
+                dcc.Markdown(
+                    f"""
+### Summary
+- **LinearRegression wins {int((best_models_df['Best Model']=='LinearRegression').sum())}/6 blocks**
+- **DecisionTree wins {int((best_models_df['Best Model']=='DecisionTree').sum())}/6 blocks**
+- **RandomForest wins 0/6 blocks**
 
-**R²_test ≈ 0.893**
+### Insights
+- LinearRegression is stable and performs best overall.
+- DecisionTree captures some non-linear patterns but overfits.
+- RandomForest is stable but does not outperform LinearRegression.
 
-→ The model **generalizes very well**.
-
----
-
-##### **Conclusion**
-
-- **R² = 0.8932 on the test_set** → The multivariate linear regression model performs **quite well**, predicting close to actual values.  
-- The **~10.7% unexplained variance** can be reduced by adding more predictors or trying nonlinear models.  
-- **R²_test** is a much more **reliable indicator** than R² computed on the full dataset."""
+### Conclusion
+**LinearRegression** is the most effective and interpretable baseline model  
+for rolling time-series demand forecasting.
+                    """
                 ),
             ],
         ),
-    ]
+    ],
 )
+
